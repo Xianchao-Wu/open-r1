@@ -15,6 +15,7 @@
 import logging
 import os
 import sys
+sys.path.append('/workspace/asr/deepseek-r1/open-r1/src')
 
 import datasets
 import torch
@@ -36,6 +37,7 @@ logger = logging.getLogger(__name__)
 
 def main(script_args, training_args, model_args):
     # Set seed for reproducibility
+    import ipdb; ipdb.set_trace()
     set_seed(training_args.seed)
 
     ###############
@@ -81,7 +83,7 @@ def main(script_args, training_args, model_args):
     tokenizer = get_tokenizer(model_args, training_args)
 
     # Get reward functions from the registry
-    reward_funcs = get_reward_funcs(script_args)
+    reward_funcs = get_reward_funcs(script_args) # script_args.reward_funcs = ['accuracy', 'format', 'tag_count']
 
     # Format into conversation
     def make_conversation(example, prompt_column: str = script_args.dataset_prompt_column):
@@ -95,7 +97,7 @@ def main(script_args, training_args, model_args):
 
         prompt.append({"role": "user", "content": example[prompt_column]})
         return {"prompt": prompt}
-
+    import ipdb; ipdb.set_trace()
     dataset = dataset.map(make_conversation)
 
     for split in dataset:
@@ -138,7 +140,10 @@ def main(script_args, training_args, model_args):
         checkpoint = training_args.resume_from_checkpoint
     elif last_checkpoint is not None:
         checkpoint = last_checkpoint
-    train_result = trainer.train(resume_from_checkpoint=checkpoint)
+
+    import ipdb; ipdb.set_trace()
+    train_result = trainer.train(resume_from_checkpoint=checkpoint) # NOTE
+
     metrics = train_result.metrics
     metrics["train_samples"] = len(dataset[script_args.dataset_train_split])
     trainer.log_metrics("train", metrics)
@@ -182,6 +187,7 @@ def main(script_args, training_args, model_args):
 
 
 if __name__ == "__main__":
+    import ipdb; ipdb.set_trace()
     parser = TrlParser((GRPOScriptArguments, GRPOConfig, ModelConfig))
     script_args, training_args, model_args = parser.parse_args_and_config()
     main(script_args, training_args, model_args)

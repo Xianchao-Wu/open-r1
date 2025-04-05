@@ -38,6 +38,8 @@ accelerate launch --config_file=recipes/accelerate_configs/zero3.yaml src/open_r
 import logging
 import os
 import sys
+sys.path.append('/workspace/asr/deepseek-r1/open-r1/src')
+sys.path.append('/workspace/asr/deepseek-r1/open-r1/src/open_r1')
 
 import datasets
 import torch
@@ -100,7 +102,10 @@ def main(script_args, training_args, model_args):
     ################
     # Load datasets
     ################
+    import ipdb; ipdb.set_trace()
     dataset = load_dataset(script_args.dataset_name, name=script_args.dataset_config)
+    import ipdb; ipdb.set_trace()
+    dataset['train'] = dataset['train'].select(range(5)) # TODO only keep the first several samples
 
     ################
     # Load tokenizer
@@ -130,6 +135,9 @@ def main(script_args, training_args, model_args):
     ############################
     # Initialize the SFT Trainer
     ############################
+    import ipdb; ipdb.set_trace()
+    # TODO only keep top-100 sample of the train_dataset
+
     trainer = SFTTrainer(
         model=model_args.model_name_or_path,
         args=training_args,
@@ -193,6 +201,7 @@ def main(script_args, training_args, model_args):
 
 
 if __name__ == "__main__":
+    import ipdb; ipdb.set_trace()
     parser = TrlParser((ScriptArguments, SFTConfig, ModelConfig))
     script_args, training_args, model_args = parser.parse_args_and_config()
     main(script_args, training_args, model_args)

@@ -40,6 +40,7 @@ else:
 
 def accuracy_reward(completions, solution, **kwargs):
     """Reward function that checks if the completion is the same as the ground truth."""
+    #import ipdb; ipdb.set_trace()
     contents = [completion[0]["content"] for completion in completions]
     rewards = []
     for content, sol in zip(contents, solution):
@@ -86,6 +87,7 @@ def accuracy_reward(completions, solution, **kwargs):
 
 def format_reward(completions, **kwargs):
     """Reward function that checks if the reasoning process is enclosed within <think> and </think> tags, while the final answer is enclosed within <answer> and </answer> tags."""
+    #import ipdb; ipdb.set_trace()
     pattern = r"^<think>\n.*?\n</think>\n<answer>\n.*?\n</answer>$"
     completion_contents = [completion[0]["content"] for completion in completions]
     matches = [re.match(pattern, content, re.DOTALL | re.MULTILINE) for content in completion_contents]
@@ -97,7 +99,7 @@ def tag_count_reward(completions, **kwargs) -> list[float]:
 
     Adapted from: https://gist.github.com/willccbb/4676755236bb08cab5f4e54a0475d6fb#file-grpo_demo-py-L90
     """
-
+    #import ipdb; ipdb.set_trace()
     def count_tags(text: str) -> float:
         count = 0.0
         if text.count("<think>\n") == 1:
